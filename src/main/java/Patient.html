@@ -397,6 +397,30 @@ document.getElementById('editPatientForm').addEventListener('submit', function(e
 });
 
 
+    document.getElementById('patientTable').addEventListener('click', function(event) {
+    if (event.target && event.target.classList.contains('delete-btn')) {
+        const row = event.target.closest('tr');
+        const patientId = row.cells[0].textContent; // Get patient ID from the row
+
+        // Send DELETE request to soft delete the patient
+        fetch(`http://localhost:8080/api/patient/soft-delete/${patientId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('responseMessage').textContent = data;
+            document.getElementById('viewButton').click(); // Refresh patient list after deletion
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('responseMessage').textContent = "An error occurred";
+        });
+    }
+});
+
 </script>
 </body>
 </html>
